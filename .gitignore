@@ -1,0 +1,64 @@
+## Carpetas de Compilación (Evita subir binarios)
+## Carpetas de Compilación (Evita subir binarios)
+**/bin/
+**/obj/
+
+## Archivos binarios y símbolos
+*.dll
+*.exe
+*.so
+*.dylib
+*.pdb
+*.mdb
+*.nupkg
+
+## Archivos y carpetas de Visual Studio / Rider / VS Code
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Paquetes y cache de NuGet
+**/packages/
+*.nupkg
+.nuget/
+
+## Publicaciones y artefactos de despliegue
+**/publish/
+*.Publish.xml
+
+## Archivos de logs y temporales
+*.log
+*.tlog
+*.cache
+*.zip
+*.tar.gz
+
+## Archivos de configuración locales (contienen secretos)
+**/appsettings.Development.json
+
+## Archivos de base de datos locales
+*.db
+*.db-shm
+*.db-wal
+
+## Otros (SO específicos / IDE)
+.DS_Store
+Thumbs.db
+desktop.ini
+
+## Archivos de usuario y herramientas locales
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Archivos de bases de datos locales (opcional por si usas SQLite luego)
+*.db
+*.db-shm
+*.db-wal
