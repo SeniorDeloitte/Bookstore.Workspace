@@ -1,3 +1,4 @@
+using MassTransit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using OrderService.Data;
@@ -14,6 +15,18 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Progr
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("localhost", "/", h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+    });
+});
 
 var app = builder.Build();
 

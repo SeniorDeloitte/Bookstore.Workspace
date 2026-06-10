@@ -1,4 +1,6 @@
 using MediatR;
+using MassTransit;
+using Shared;
 using OrderService.Data;
 
 namespace OrderService.Features.Orders.Commands
@@ -13,10 +15,12 @@ namespace OrderService.Features.Orders.Commands
     public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, int>
     {
         private readonly OrderDbContext _context;
+        private readonly IPublishEndpoint _publishEndpoint;
 
-        public CreateOrderCommandHandler(OrderDbContext context)
+        public CreateOrderCommandHandler(OrderDbContext context, IPublishEndpoint publishEndpoint)
         {
             _context = context;
+            _publishEndpoint = publishEndpoint;
         }
 
         public async Task<int> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
@@ -44,6 +48,19 @@ namespace OrderService.Features.Orders.Commands
 
             _context.Orders.Add(order);
             await _context.SaveChangesAsync(cancellationToken);
+
+            var eventMessage = new OrderCreatedEvent
+            {
+                OrderId = order.Id,
+                CustomerEmail = order.CustomerEmail,
+                Items = order.Items.Select(oi => new OrderItemEventDto
+                {
+                    BookId = oi.BookId,
+                    Quantity = oi.Quantity
+                }).ToList()
+            };
+
+            await _publishEndpoint.Publish(eventMessage, cancellationToken);
 
             return order.Id;
         }

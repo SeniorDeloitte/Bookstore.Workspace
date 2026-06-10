@@ -1,3 +1,5 @@
+using MassTransit;
+using InventoryService.Messaging;
 using InventoryService.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,14 +9,27 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<InventoryDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-// Habilitamos el uso de clases de Controlador (API tradicionales).
 builder.Services.AddControllers();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
-
-// Usamos AddSwaggerGen en lugar de AddOpenApi para una mejor integración con controladores.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddMassTransit(x =>
+{
+    x.AddConsumer<OrderCreatedConsumer>();
+
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("localhost", "/", h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+
+        cfg.ConfigureEndpoints(context);
+    });
+});
 
 
 var app = builder.Build();

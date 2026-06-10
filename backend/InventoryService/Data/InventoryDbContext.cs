@@ -10,15 +10,19 @@ namespace InventoryService.Data
 
         public DbSet<Book> Books { get; set; }
 
-        // --- AGREGAMOS ESTE MÉTODO PARA CONFIGURAR EL DECIMAL ---
+        public static decimal CalculateDiscount(decimal originalPrice, decimal discountPercentage)
+            => throw new NotSupportedException();
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configura la propiedad Price para que tenga un máximo de 18 dígitos y 2 decimales
             modelBuilder.Entity<Book>()
                 .Property(b => b.Price)
                 .HasPrecision(18, 2);
+
+            modelBuilder.HasDbFunction(typeof(InventoryDbContext).GetMethod(nameof(CalculateDiscount), new[] { typeof(decimal), typeof(decimal) })!)
+                .HasName("fn_CalculateDiscount");
         }
     }
 }

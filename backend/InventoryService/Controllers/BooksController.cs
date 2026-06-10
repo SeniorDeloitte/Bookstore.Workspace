@@ -80,5 +80,19 @@ namespace InventoryService.Controllers
 
             return NoContent();
         }
+
+        [HttpGet("low-stock/{threshold}")]
+        public async Task<ActionResult<List<BookDto>>> GetLowStockBooks(int threshold)
+        {
+            var books = await _mediator.Send(new GetLowStockBooksQuery(threshold));
+            return Ok(books);
+        }
+
+        [HttpGet("discounts/{percentage}")]
+        public async Task<ActionResult<List<DiscountedBookDto>>> GetDiscountedBooks(decimal percentage)
+        {
+            var books = await _mediator.Send(new GetDiscountedBooksQuery(percentage));
+            return Ok(books);
+        }
     }
 }
