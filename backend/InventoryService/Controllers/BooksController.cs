@@ -94,5 +94,11 @@ namespace InventoryService.Controllers
             var books = await _mediator.Send(new GetDiscountedBooksQuery(percentage));
             return Ok(books);
         }
+
+        [HttpGet("test-error")]
+        public IActionResult TestError()
+        {
+            throw new Exception("¡Esta es una excepción simulada de prueba para verificar nuestro Middleware!");
+        }
     }
 }

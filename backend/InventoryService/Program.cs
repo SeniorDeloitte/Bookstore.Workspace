@@ -1,3 +1,4 @@
+using InventoryService.Middleware;
 using MassTransit;
 using InventoryService.Messaging;
 using InventoryService.Data;
@@ -33,6 +34,8 @@ builder.Services.AddMassTransit(x =>
 
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 
 if (app.Environment.IsDevelopment())
